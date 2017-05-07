@@ -3,6 +3,7 @@ import logo from './logo.svg';
 import './App.css';
 import moment from 'moment';
 
+import fbConfig from './config/firebase';
 import Transaction from './components/transaction';
 
 
