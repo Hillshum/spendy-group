@@ -1,21 +1,42 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
-import moment from 'moment';
 
-import fbConfig from './config/firebase';
 import Transaction from './components/transaction';
+
+import {database} from './api/firebase';
 
 
 class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      memo: "The best place",
-      date: moment(),
-      amount: 1232,
+      details: {},
+      amounts: {}
     }
+  }
 
+  componentWillMount() {
+    this.detailsRef = database.ref('details');
+    this.detailsListener = this.detailsRef.on('value', snapshot=>{
+      this.setState({details: snapshot.val()})
+    })
+
+    this.amountsRef = database.ref('amounts')
+    this.amountsListener = this.amountsRef.on('value', snapshot=>{
+      this.setState({amounts: snapshot.val()})
+    })
+
+  }
+
+  componentWillUnmount() {
+    this.detailsRef.off(this.detailsListener)
+    this.amountsRef.off(this.amountsListener)
+  }
+
+  getAmounts(amounts={}) {
+    return Object.keys(amounts).map(amount=>(
+      this.state.amounts[amount]
+    ))
   }
 
 
@@ -23,17 +44,20 @@ class App extends Component {
     return (
       <div className="App">
         <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
+          <h2>Spendy-Group expense tracker</h2>
         </div>
 
-        <Transaction memo={this.state.memo}
-          amount={this.state.amount}
-          date={this.state.date}
+        {Object.keys(this.state.details).map(key=> {
+          const transaction = this.state.details[key]
+          return <Transaction memo={transaction.description}
+          amounts={this.getAmounts(transaction.amounts)}
+          date={transaction.date}
+          key={key}
           onAmountChange={(amount)=>{this.setState({amount:amount})}}
           onMemoChange={(memo)=>{this.setState({memo:memo})}}
           onDateChange={(date)=>(this.setState({date:date}))}
            />
+       })}
 
       </div>
     );
