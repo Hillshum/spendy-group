@@ -33,9 +33,9 @@ class App extends Component {
     this.amountsRef.off(this.amountsListener)
   }
 
-  getAmounts(amounts={}) {
-    return Object.keys(amounts).map(amount=>(
-      this.state.amounts[amount]
+  getAmounts(amountKeys={}) {
+    return Object.keys(amountKeys).map(amountKey=>(
+      this.state.amounts[amountKey] || {}
     ))
   }
 
