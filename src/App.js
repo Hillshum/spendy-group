@@ -3,6 +3,7 @@ import './App.css';
 
 import Transaction from './components/transaction';
 import FinalBalance from './components/finalBalance'
+import Auth from './components/auth'
 
 import {database} from './api/firebase';
 
@@ -47,6 +48,7 @@ class App extends Component {
         <div className="App-header">
           <h2>Spendy-Group expense tracker</h2>
         </div>
+        <Auth/>
 
         {Object.keys(this.state.details).map(key=> {
           const transaction = this.state.details[key]
