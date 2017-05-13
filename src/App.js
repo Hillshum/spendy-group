@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 
 import Transaction from './components/transaction';
+import FinalBalance from './components/finalBalance'
 
 import {database} from './api/firebase';
 
@@ -59,6 +60,7 @@ class App extends Component {
            />
        })}
 
+        <FinalBalance amounts={this.state.amounts}/>
       </div>
     );
   }

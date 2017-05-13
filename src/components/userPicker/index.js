@@ -1,6 +1,6 @@
 import React from 'react';
 
-import users from './users'
+import users from '../../config/users'
 
 const UserPicker = props => {
 
