@@ -50,13 +50,13 @@ class App extends Component {
 
         {Object.keys(this.state.details).map(key=> {
           const transaction = this.state.details[key]
-          return <Transaction memo={transaction.description}
+          return <Transaction memo={transaction.memo}
           amounts={this.getAmounts(transaction.amounts)}
           date={transaction.date}
           key={key}
           onAmountChange={(amount)=>{this.setState({amount:amount})}}
-          onMemoChange={(memo)=>{this.setState({memo:memo})}}
-          onDateChange={(date)=>(this.setState({date:date}))}
+          onMemoChange={(memo)=>{this.detailsRef.child(key).update({memo})}}
+          onDateChange={(date)=>{this.detailsRef.child(key).update({date:date.unix() * 1000})}}
            />
        })}
 
