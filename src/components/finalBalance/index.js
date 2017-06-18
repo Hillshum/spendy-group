@@ -2,30 +2,30 @@ import React from 'react'
 
 import CurrencyInput from 'react-currency-masked-input'
 
-import users from '../../config/users'
+import "./style.css"
 
 
 const FinalBalance = (props) => {
-  const {amounts} = props
+  const {amounts, users} = props
   const totalPaid = Object.values(amounts).reduce((prev, cur) => {
-    return prev + +cur.amount
+    return prev + +cur.value
   }, 0)
   const sharedTotal = totalPaid / 3
 
   const individualTotals = {}
-  Object.values(amounts).forEach(amount=>{
-    const {user, amount:val} = amount
+  Object.keys(amounts).forEach(amountId=>{
+    const {value, user} = amounts[amountId]
     if (individualTotals[user] === undefined) {
         individualTotals[user] = 0
     }
-    individualTotals[user] += +val
+    individualTotals[user] += +value
   })
   return <div className='final-balance'>
-    {users.map(user=>{
-      const val = individualTotals[user.email] || 0
+    {Object.keys(users).map(user=>{
+      const val = individualTotals[user] || 0
       
-      return <div key={user.email}>
-        <span>{user.name}</span>
+      return <div key={user}>
+        <span>{users[user].name}</span>
         <CurrencyInput value={(val - sharedTotal).toFixed(2)}/>
       </div>
     })}

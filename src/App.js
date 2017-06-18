@@ -13,8 +13,9 @@ class App extends Component {
     super(props)
     this.state = {
       details: {},
-      amounts: {}
+      users: {}
     }
+    this.getAmounts = this.getAmounts.bind(this)
   }
 
   componentWillMount() {
@@ -23,23 +24,24 @@ class App extends Component {
       this.setState({details: snapshot.val()})
     })
 
-    this.amountsRef = database.ref('amounts')
-    this.amountsListener = this.amountsRef.on('value', snapshot=>{
-      this.setState({amounts: snapshot.val()})
+    this.usersRef = database.ref('users')
+    this.usersListener = this.usersRef.on('value', snapshot=>{
+      this.setState({users: snapshot.val()})
     })
 
   }
 
   componentWillUnmount() {
     this.detailsRef.off(this.detailsListener)
-    this.amountsRef.off(this.amountsListener)
+    this.amountsRef.off(this.usersListener)
   }
 
-  getAmounts(amountKeys={}) {
-    return Object.keys(amountKeys).map(amountKey=>(
-      this.state.amounts[amountKey] || {}
-    ))
+  getAmounts() {
+    return Object.values(this.state.details).reduce((prev, curr)=>{
+      return Object.assign(prev, curr.amounts || {})
+    }, {})
   }
+
 
 
   render() {
@@ -52,17 +54,19 @@ class App extends Component {
 
         {Object.keys(this.state.details).map(key=> {
           const transaction = this.state.details[key]
+          const ref = this.detailsRef.child(key)
           return <Transaction memo={transaction.memo}
-          amounts={this.getAmounts(transaction.amounts)}
-          date={transaction.date}
-          key={key}
-          onAmountChange={(amount)=>{this.setState({amount:amount})}}
-          onMemoChange={(memo)=>{this.detailsRef.child(key).update({memo})}}
-          onDateChange={(date)=>{this.detailsRef.child(key).update({date:date.unix() * 1000})}}
+            users={this.state.users}
+            amounts={transaction.amounts}
+            date={transaction.date}
+            key={key}
+            onAmountChange={(amountId, value, user)=>{ref.child('amounts').update({[amountId]:{value, user}})}}
+            onMemoChange={(memo)=>{ref.update({memo})}}
+            onDateChange={(date)=>{ref.update({date:date.unix() * 1000})}}
            />
        })}
 
-        <FinalBalance amounts={this.state.amounts}/>
+        <FinalBalance amounts={this.getAmounts()} users={this.state.users}/>
       </div>
     );
   }

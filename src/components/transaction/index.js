@@ -3,24 +3,22 @@ import moment from 'moment';
 import DatePicker from 'react-datepicker';
 import CurrencyInput from 'react-currency-masked-input'
 
+import './style.css'
+
 import UserPicker from '../userPicker'
+
 
 import 'react-datepicker/dist/react-datepicker.css';
 
 
 const Transaction = props => {
-  const {memo, date, amounts, onAmountChange, onMemoChange, onDateChange} = props;
+  const {memo, date, amounts={}, users, onAmountChange, onMemoChange, onDateChange} = props;
 
-  // The datepicker exports just the change, but the others need to be
-  // wrapped with only the value
-  const amountChange = (e, value) => {
-    onAmountChange(value);
-  }
   const memoChange = (e) => {
     onMemoChange(e.target.value);
   }
 
-  const totalAmount = Object.values(amounts).reduce( (a,b) => a + Number(b.amount), 0).toFixed(2)
+  const totalAmount = Object.values(amounts).reduce( (a,b) => a + Number(b.value), 0).toFixed(2)
   const sharedAmount = (totalAmount/3.0).toFixed(2)
   return <div className="transaction">
       <DatePicker selected={moment(date)} onChange={onDateChange} />
@@ -34,13 +32,13 @@ const Transaction = props => {
         <CurrencyInput value={String(sharedAmount)} />
       </div>
       <div className="transaction-amounts">
-        {amounts.map(amount=>(
-
-          <div className="transaction-amount">
-            <UserPicker selected={amount.user}/>
-          <CurrencyInput value={String(amount.amount)} onChange={amountChange} />
+        {Object.keys(amounts || {}).map(amountId=>{
+          const {value, user} = amounts[amountId]
+          return <div className="transaction-amount" key={user}>
+            <UserPicker users={users} selected={user} onChange={user=>onAmountChange(amountId, value, user)} />
+            <CurrencyInput value={String(value)} onChange={(e, value)=>onAmountChange(amountId, value, user)} />
           </div>
-        ))}
+        })}
       </div>
     </div>
 }

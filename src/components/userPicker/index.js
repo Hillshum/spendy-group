@@ -1,10 +1,9 @@
 import React from 'react';
 
-import users from '../../config/users'
 
 const UserPicker = props => {
 
-  const {selected} = props
+  const {selected=-1, users} = props
 
   const onChange = e => {
     if (typeof props.onChange === 'function')
@@ -12,8 +11,9 @@ const UserPicker = props => {
   }
 
   return <select value={selected} onChange={onChange}>
-    {users.map(user=>(
-      <option key={user.email} value={user.email}>{user.name}</option>
+    <option value={-1}></option>
+    {Object.keys(users).map(user=>(
+      <option key={user} value={user}>{users[user].name}</option>
     ))}
   </select>
 }
