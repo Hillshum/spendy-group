@@ -25,7 +25,7 @@ const Transaction = props => {
     addAmount({value, user})
   }
 
-  const totalAmount = Object.keys(amounts).reduce( (a,b) => a + Number(amoutns[b].value), 0).toFixed(2)
+  const totalAmount = Object.keys(amounts).reduce( (a,b) => a + Number(amounts[b].value), 0).toFixed(2)
   const sharedAmount = (totalAmount/3.0).toFixed(2)
   return <div className="transaction">
       <DatePicker selected={moment(date)} onChange={onDateChange} />
