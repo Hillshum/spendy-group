@@ -45,8 +45,8 @@ class App extends Component {
   }
 
   getAmounts() {
-    return Object.values(this.state.details).reduce((prev, curr)=>{
-      return Object.assign(prev, curr.amounts || {})
+    return Object.keys(this.state.details).reduce((prev, curr)=>{
+      return Object.assign(prev, this.state.details[curr].amounts || {})
     }, {})
   }
 
@@ -56,7 +56,7 @@ class App extends Component {
     const {newTransaction} = this.state
     const addTransaction = () => {
       this.detailsRef.push(this.state.newTransaction)
-      this.setState({newTransaction: this.blankNew})
+      this.setState({newTransaction: this.blankNew()})
     }
     return (
       <div className="App">

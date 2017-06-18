@@ -7,8 +7,8 @@ import "./style.css"
 
 const FinalBalance = (props) => {
   const {amounts, users} = props
-  const totalPaid = Object.values(amounts).reduce((prev, cur) => {
-    return prev + +cur.value
+  const totalPaid = Object.keys(amounts).reduce((prev, cur) => {
+    return prev + +amounts[cur].value
   }, 0)
   const sharedTotal = totalPaid / 3
 
