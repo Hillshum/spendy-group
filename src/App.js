@@ -11,17 +11,25 @@ import {database} from './api/firebase';
 class App extends Component {
   constructor(props) {
     super(props)
+
     this.state = {
       details: {},
-      users: {}
+      users: {},
+      newTransaction: this.blankNew()
     }
     this.getAmounts = this.getAmounts.bind(this)
   }
 
+    blankNew() {
+    return  Object.assign({}, {
+      memo: '',
+      date: (new Date()).getTime()
+    })}
+
   componentWillMount() {
     this.detailsRef = database.ref('details');
     this.detailsListener = this.detailsRef.on('value', snapshot=>{
-      this.setState({details: snapshot.val()})
+      this.setState({details: snapshot.val() || {}})
     })
 
     this.usersRef = database.ref('users')
@@ -45,6 +53,11 @@ class App extends Component {
 
 
   render() {
+    const {newTransaction} = this.state
+    const addTransaction = () => {
+      this.detailsRef.push(this.state.newTransaction)
+      this.setState({newTransaction: this.blankNew})
+    }
     return (
       <div className="App">
         <div className="App-header">
@@ -66,6 +79,17 @@ class App extends Component {
             addAmount={(child)=>{ref.child('amounts').push(child)}}
            />
        })}
+
+       <Transaction
+          memo={newTransaction.memo}
+          users={this.state.users}
+          amounts={{}}
+          date={newTransaction.date}
+          onMemoChange={memo=>this.setState({newTransaction: {memo, date: this.state.newTransaction.date}})}
+          onDateChange={date=>this.setState({newTransaction: {date:date.unix() * 1000, memo: this.state.newTransaction.memo}})}
+          addAmounts={false}
+        />
+        <button onClick={addTransaction}>Add</button>
 
         <FinalBalance amounts={this.getAmounts()} users={this.state.users}/>
       </div>
