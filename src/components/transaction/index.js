@@ -12,10 +12,17 @@ import 'react-datepicker/dist/react-datepicker.css';
 
 
 const Transaction = props => {
-  const {memo, date, amounts={}, users, onAmountChange, onMemoChange, onDateChange} = props;
+  const {memo, date, amounts={}, users, onAmountChange, onMemoChange, onDateChange, addAmount} = props;
 
   const memoChange = (e) => {
     onMemoChange(e.target.value);
+  }
+
+  const newAmount = ({target}) => {
+    const parent = target.parentElement
+    const value = parent.querySelector('.new-value').value
+    const user = parent.querySelector('.new-user').value
+    addAmount({value, user})
   }
 
   const totalAmount = Object.values(amounts).reduce( (a,b) => a + Number(b.value), 0).toFixed(2)
@@ -39,6 +46,11 @@ const Transaction = props => {
             <CurrencyInput value={String(value)} onChange={(e, value)=>onAmountChange(amountId, value, user)} />
           </div>
         })}
+          <div className="transaction-amount new-transaction" >
+            <UserPicker className="new-user" users={users} />
+            <CurrencyInput className="new-value" />
+            <button className="btn btn-primary" onClick={newAmount} >Add</button>
+          </div>
       </div>
     </div>
 }

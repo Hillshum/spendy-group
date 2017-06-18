@@ -63,6 +63,7 @@ class App extends Component {
             onAmountChange={(amountId, value, user)=>{ref.child('amounts').update({[amountId]:{value, user}})}}
             onMemoChange={(memo)=>{ref.update({memo})}}
             onDateChange={(date)=>{ref.update({date:date.unix() * 1000})}}
+            addAmount={(child)=>{ref.child('amounts').push(child)}}
            />
        })}
 
