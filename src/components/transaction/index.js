@@ -31,12 +31,10 @@ const Transaction = props => {
       <DatePicker selected={moment(date)} onChange={onDateChange} />
       <input type="text" onChange={memoChange} className="memo" value={memo} />
       <div className="total-amount-wrapper">
-        <div>Total Cost</div>
         <CurrencyInput value={String(totalAmount)} />
       </div>
       <div className="shared-amount-wrapper">
-        <div>Shared Cost</div>
-        <CurrencyInput value={String(sharedAmount)} />
+        <input value={`/ 3 = ${String(sharedAmount)}`} disabled={true} />
       </div>
       <div className="transaction-amounts">
         {Object.keys(amounts || {}).map(amountId=>{
