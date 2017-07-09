@@ -1,3 +1,13 @@
 .transaction {
   margin-top: 20px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.transaction > * {
+  margin: 3px;
+}
+
+.transaction-amount {
+  margin: 3px 0;
 }
