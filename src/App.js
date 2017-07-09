@@ -20,11 +20,12 @@ class App extends Component {
     this.getAmounts = this.getAmounts.bind(this)
   }
 
-    blankNew() {
+  blankNew() {
     return  Object.assign({}, {
       memo: '',
       date: (new Date()).getTime()
-    })}
+    })
+  }
 
   componentWillMount() {
     this.detailsRef = database.ref('details');
