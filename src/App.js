@@ -18,6 +18,7 @@ class App extends Component {
       newTransaction: this.blankNew()
     }
     this.getAmounts = this.getAmounts.bind(this)
+    this.logOut = this.logOut.bind(this)
   }
 
   blankNew() {
@@ -38,6 +39,10 @@ class App extends Component {
       this.setState({users: snapshot.val()})
     })
 
+  }
+
+  logOut() {
+    this.setState({details: {}, users: {}})
   }
 
   componentWillUnmount() {
@@ -64,7 +69,7 @@ class App extends Component {
         <div className="App-header">
           <h2>Spendy-Group expense tracker</h2>
         </div>
-        <Auth/>
+        <Auth logOut={this.logOut}/>
 
         {Object.keys(this.state.details).map(key=> {
           const transaction = this.state.details[key]
